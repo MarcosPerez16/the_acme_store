@@ -4,6 +4,7 @@ const pg = require("pg");
 const client = new pg.Client(
   process.env.DATABASE_URL || "postgres://localhost/acme_store_db"
 );
+const { v4: uuidv4 } = require("uuid");
 //... other imports
 
 const createTables = async () => {
@@ -37,7 +38,22 @@ const createTables = async () => {
 };
 
 const createProduct = async (productData) => {
-  //implement here
+  try {
+    const { name } = productData;
+
+    const productId = uuidv4();
+    const SQL = `
+        INSERT INTO products (id, name)
+        VALUES ($1, $2)
+        RETURNING *;
+    `;
+
+    const response = await client.query(SQL, [productId, name]);
+    return response.rows[0];
+  } catch (error) {
+    console.error("Error creating product:", error);
+    throw error;
+  }
 };
 
 const createUser = async (userData) => {
