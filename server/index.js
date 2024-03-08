@@ -15,6 +15,55 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
+//RESTful Routes
+
+//GET USERS
+app.get("/api/users", async (req, res) => {
+  const users = await fetchUsers();
+  res.json(users);
+});
+
+//GET PRODUCTS
+app.get("/api/products", async (req, res) => {
+  const products = await fetchProducts();
+  res.json(products);
+});
+
+//GET FAVORITES
+app.get("/api/users/:id/favorites", async (req, res) => {
+  const userId = req.params.id;
+  const favorites = await fetchFavorites(userId);
+  if (favorites !== undefined) {
+    res.json(favorites);
+  } else {
+    res.status(404).json({ error: `No favorites found for user ${userId}` });
+  }
+});
+
+//POST FAVORITES
+app.post("/api/users/:id/favorites", async (req, res) => {
+  const userId = req.params.id;
+  const productId = req.body.product_id;
+  const newFavorite = await createFavorite(userId, productId);
+  res.status(201).json(newFavorite);
+});
+
+//DELETE FAVORITE
+app.delete("/api/users/:userId/favorites/:id", async (req, res) => {
+  const userId = req.params.userId;
+  const favoriteId = req.params.id;
+  const deletedFavorite = await destroyFavorite(userId, favoriteId);
+  if (deletedFavorite) {
+    res.json(deletedFavorite);
+  } else {
+    res
+      .status(404)
+      .json({
+        error: `No favorite found for user ${userId} with id ${favoriteId}`,
+      });
+  }
+});
+
 const init = async () => {
   try {
     console.log("Connecting to the database");
