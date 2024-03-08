@@ -105,15 +105,55 @@ const fetchProducts = async () => {
 };
 
 const fetchFavorites = async (userId) => {
-  //implement here
+  try {
+    const SQL = `
+        SELECT * FROM favorites WHERE user_id = $1
+    `;
+    const response = await client.query(SQL, [userId]);
+  } catch (error) {
+    console.error("Error fetching favorites:", error);
+    throw error;
+  }
 };
 
-const createFavorite = async (favoriteData) => {
-  //implement here
+const createFavorite = async (user_id, product_id) => {
+  try {
+    const SQL = `
+        INSERT INTO favorites (id, user_id, product_id)
+        VALUES ($1, $2, $3)
+        RETURNING *;
+    `;
+    const favoriteId = uuidv4();
+    const response = await client.query(SQL, [favoriteId, user_id, product_id]);
+    return response.rows[0];
+  } catch (error) {
+    console.error("Error creating favorite:", error);
+    throw error;
+  }
 };
 
 const destroyFavorite = async (userId, favoriteId) => {
-  //implement here
+  try {
+    const result = await client.query(
+      `
+            DELETE FROM favorites
+            WHERE user_id = $1 AND id = $2
+            RETURNING *;
+            `,
+      [userId, favoriteId]
+    );
+
+    if (result.rows.length === 0) {
+      console.log(`No favorite found for user ${userId} with id ${favoriteId}`);
+      return null;
+    }
+
+    console.log(`Favorite deleted for user ${userId} with id ${favoriteId}`);
+    return result.rows[0];
+  } catch (error) {
+    console.error(`Error deleting favorite: ${error}`);
+    throw error;
+  }
 };
 
 module.exports = {

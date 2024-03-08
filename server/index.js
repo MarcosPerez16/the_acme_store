@@ -7,6 +7,9 @@ const {
   createUser,
   fetchUsers,
   fetchProducts,
+  fetchFavorites,
+  createFavorite,
+  destroyFavorite,
 } = require("./db");
 const express = require("express");
 const app = express();
@@ -40,6 +43,32 @@ const init = async () => {
     //Test fetchProducts method
     // const products = await fetchProducts();
     // console.log("Fetched products:", products);
+
+    //Test fetchFavorites method
+    // const userId = "23fd3544-47a7-47cd-85fd-f6cd9165e10c";
+    // const favorites = await fetchFavorites(userId);
+    //this if statement helps us distingush between the case where favorites are fetched successfully or there are no favorites found
+    // if (favorites !== undefined) {
+    //   console.log(`Fetched favorites for user ${userId}:`, favorites);
+    // } else {
+    //   console.log(`No favorites found for user ${userId}`);
+    // }
+
+    //Test createFavorite method
+    // const userId = "23fd3544-47a7-47cd-85fd-f6cd9165e10c";
+    // const productId = "8b8ddb1a-6661-4c68-b11a-a1c72d2663a5";
+    // const newFavorite = await createFavorite(userId, productId);
+    // console.log("New favorite created:", newFavorite);
+
+    //Test destroyFavorite method
+    // const userId = "23fd3544-47a7-47cd-85fd-f6cd9165e10c";
+    // const favoriteId = "650d4384-d2a3-4cfa-a675-c458ff29a3f5";
+    // const deletedFavorite = await destroyFavorite(userId, favoriteId);
+    // if (deletedFavorite) {
+    //   console.log("Favorite deleted:", deletedFavorite);
+    // } else {
+    //   console.log(`No favorite found for user ${userId} with id ${favoriteId}`);
+    // }
 
     const port = process.env.PORT || 3000;
     app.listen(port, () => console.log(`Listening on port ${port}`));
