@@ -1,6 +1,6 @@
 //Express application and setup functions/RESTful Routes
 
-const { client, createTables, createProduct } = require("./db");
+const { client, createTables, createProduct, createUser } = require("./db");
 const express = require("express");
 const app = express();
 app.use(express.json());
@@ -18,6 +18,13 @@ const init = async () => {
     //Test createProduct method
     // const newProduct = await createProduct({ name: "Sample Product" });
     // console.log("New product created:", newProduct);
+
+    //Test createUser method
+    // const newUser = await createUser({
+    //   username: "MarcosPerez16",
+    //   password: "test_password",
+    // });
+    // console.log("New user created:", newUser);
 
     const port = process.env.PORT || 3000;
     app.listen(port, () => console.log(`Listening on port ${port}`));

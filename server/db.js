@@ -5,6 +5,7 @@ const client = new pg.Client(
   process.env.DATABASE_URL || "postgres://localhost/acme_store_db"
 );
 const { v4: uuidv4 } = require("uuid");
+const bcrypt = require("bcrypt");
 //... other imports
 
 const createTables = async () => {
@@ -56,8 +57,23 @@ const createProduct = async (productData) => {
   }
 };
 
-const createUser = async (userData) => {
-  //implement here
+const createUser = async ({ username, password }) => {
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const SQL = `
+        INSERT INTO users(id, username, password) VALUES($1, $2, $3) RETURNING *
+    `;
+
+    const response = await client.query(SQL, [
+      uuidv4(),
+      username,
+      hashedPassword,
+    ]);
+    return response.rows[0];
+  } catch (error) {
+    console.error("Error creating user:", error);
+    throw error;
+  }
 };
 
 const fetchUsers = async () => {
