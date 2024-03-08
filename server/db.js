@@ -77,11 +77,31 @@ const createUser = async ({ username, password }) => {
 };
 
 const fetchUsers = async () => {
-  //implement here
+  try {
+    const SQL = `
+        SELECT id, username, password
+        FROM users
+    `;
+    const response = await client.query(SQL);
+    return response.rows;
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    throw error;
+  }
 };
 
 const fetchProducts = async () => {
-  //implement here
+  try {
+    const SQL = `
+        SELECT * FROM products
+    `;
+    const response = await client.query(SQL);
+
+    return response.rows;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    throw error;
+  }
 };
 
 const fetchFavorites = async (userId) => {
