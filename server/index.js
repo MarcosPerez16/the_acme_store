@@ -1,3 +1,5 @@
+//Express application and setup functions/RESTful Routes
+
 const { client, createTables } = require("./db");
 const express = require("express");
 const app = express();
